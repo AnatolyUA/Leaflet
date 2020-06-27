@@ -318,6 +318,43 @@ export var Canvas = Renderer.extend({
 		this._fillStroke(ctx, layer);
 	},
 
+	_updateShip: function (layer) {
+
+		if (!this._drawing || layer._empty()) { return; }
+
+		var rot = layer._rotation !== 0 ? layer._rotation * (Math.PI * 2) / 360 : 0;
+
+		var p = layer._point;
+		var ctx = this._ctx;
+		var r = Math.max(Math.round(layer._radius), 1);
+		var r2 = r / 2;
+		var r4 = r / 4;
+		var r6 = r / 6;
+
+		ctx.save();
+		ctx.translate(p.x, p.y);
+		ctx.rotate(rot);
+
+		// draw triangle
+		// ctx.beginPath();
+		// ctx.moveTo(0, -hh);
+		// ctx.lineTo(wh, hh * 2);
+		// ctx.lineTo(-wh, hh * 2);
+
+		ctx.beginPath();
+		ctx.moveTo(0, -r2);
+		ctx.lineTo(r4, 0);
+		ctx.lineTo(r6, r);
+		ctx.lineTo(-r6, r);
+		ctx.lineTo(-r4, 0);
+		ctx.closePath();
+
+		// rotate back and restore position
+		ctx.restore();
+
+		this._fillStroke(ctx, layer);
+	},
+
 	_fillStroke: function (ctx, layer) {
 		var options = layer.options;
 
